@@ -311,7 +311,6 @@ public class MessageServer extends JFrame {
                     System.out.println(item);
                     list.add(item);
                 }
-
             }
         }
         return list;
