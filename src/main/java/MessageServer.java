@@ -382,6 +382,7 @@ public class MessageServer extends JFrame {
         }
     }
 
+    //checkin if client is present in the clientbase
     public static ArrayList<String> checkClient(String name, String info) throws ClassNotFoundException, SQLException {
         String select = "SELECT * FROM client_table WHERE clientid=? AND someinfo=?;";
         Class.forName("org.postgresql.Driver");
