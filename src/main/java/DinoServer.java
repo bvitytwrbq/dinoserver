@@ -8,7 +8,7 @@ import java.net.Socket;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class MessageServer extends JFrame {
+public class DinoServer extends JFrame {
     private int port;
     private Connektion connektion;
 
@@ -31,7 +31,7 @@ public class MessageServer extends JFrame {
     private JButton tablerButton;
     private JPanel panel;
 
-    public MessageServer(int port){
+    public DinoServer(int port){
         this.port = port;
         brontoAddButton.addActionListener(new ActionListener() {
             @Override
@@ -476,6 +476,28 @@ public class MessageServer extends JFrame {
         }
         return list;
     }
+    public static ArrayList<String> getQuantityInfo(String type,String column) throws ClassNotFoundException {
+        String request = "SELECT * FROM dino_table WHERE name=?";
+        Class.forName("org.postgresql.Driver");
+        ArrayList<String> list = new ArrayList<>();
+        try(Connection connection = DriverManager.getConnection(conStr,login,pwd)){
+            try (PreparedStatement ps = connection.prepareStatement(request)){
+                ps.setString(1,type);
+                //ps.setString(2,column);
+                ResultSet resultSet = ps.executeQuery();
+                while (resultSet.next()){
+                    String name = resultSet.getString("name");
+                    int quantity = resultSet.getInt("quantity");
+                    //System.out.println(name + " : " + quantity);
+                    list.add(0,Integer.toString(quantity));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 
     public void deleteRow(String name) throws ClassNotFoundException, SQLException {
         String insert = "DELETE FROM dino_table WHERE name=?;";
@@ -515,9 +537,9 @@ public class MessageServer extends JFrame {
             e.printStackTrace();
         }
         int port = 8090;
-        MessageServer messageServer = new MessageServer(port);
+        DinoServer dinoServer = new DinoServer(port);
         try {
-            messageServer.start();
+            dinoServer.start();
         } catch (IOException e) {
             e.printStackTrace();
         }

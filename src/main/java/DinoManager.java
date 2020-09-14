@@ -1,6 +1,5 @@
 import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
@@ -26,23 +25,26 @@ public class DinoManager extends Application {
     public void start(Stage primaryStage) {
         Button stegoButton = new Button("stego");
         Button brontoButton = new Button("bronto");
-        Button increaseBrontoButton = new Button("add 5 brontos");
-        Button decreaseBrontoButton = new Button("remove 5 brontos");
+        Button decreaseQuantityButton = new Button("-5");
+        Button increaseQuantityButton = new Button("+5");
+
         brontoButton.setTranslateY(-101);
         brontoButton.setTranslateX(-101);
         stegoButton.setTranslateY(-101);
         stegoButton.setTranslateX(101);
-        increaseBrontoButton.setTranslateX(-105);
-        decreaseBrontoButton.setTranslateX(105);
-        final Text text = new Text("type: ");
-        text.setTranslateY(-73);
-        // Setting text to button
-        //stegoButton.setText("button");
-        // Registering a handler for button
+        decreaseQuantityButton.setTranslateX(-105);
+        increaseQuantityButton.setTranslateX(105);
+
+        final Text typeText = new Text();
+        final Text infoText = new Text();
+        typeText.setTranslateY(-73);
+        typeText.setTranslateX(-23);
+        infoText.setTranslateY(-73);
+        infoText.setTranslateX(23);
         stegoButton.setOnAction((ActionEvent event) -> {
-            // Printing Hello World! to the console
             try {
-                text.setText("type: " + String.valueOf(MessageServer.getInfo("stego","quantity")));
+                typeText.setText("stego");
+                infoText.setText(": " + (DinoServer.getInfo("stego","quantity")).get(1));
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -50,27 +52,28 @@ public class DinoManager extends Application {
         brontoButton.setOnAction((ActionEvent event) -> {
 
             try {
-                text.setText("type: " + String.valueOf(MessageServer.getInfo("bronto","quantity")));
+                typeText.setText("bronto");
+                infoText.setText(": " + (DinoServer.getInfo("bronto","quantity")).get(1));
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
         });
 
-        increaseBrontoButton.setOnAction((ActionEvent event) -> {
+        increaseQuantityButton.setOnAction((ActionEvent event) -> {
 
             try {
-                MessageServer.increaseQuantity("bronto",5);
-                text.setText(String.valueOf(MessageServer.getInfo("bronto","quantity")));
+                DinoServer.increaseQuantity(typeText.getText(),5);
+                infoText.setText(": " + (DinoServer.getInfo(typeText.getText(),"quantity").get(1)));
             } catch (ClassNotFoundException | SQLException e) {
                 e.printStackTrace();
             }
         });
 
-        decreaseBrontoButton.setOnAction((ActionEvent event) -> {
+        decreaseQuantityButton.setOnAction((ActionEvent event) -> {
 
             try {
-                MessageServer.increaseQuantity("bronto",-5);
-                text.setText(String.valueOf(MessageServer.getInfo("bronto","quantity")));
+                DinoServer.increaseQuantity(typeText.getText(),-5);
+                infoText.setText(": " + (DinoServer.getInfo(typeText.getText(),"quantity").get(1)));
             } catch (ClassNotFoundException | SQLException e) {
                 e.printStackTrace();
             }
@@ -82,9 +85,10 @@ public class DinoManager extends Application {
         // Adding all the nodes to the StackPane
         root.getChildren().add(stegoButton);
         root.getChildren().add(brontoButton);
-        root.getChildren().add(increaseBrontoButton);
-        root.getChildren().add(text);
-        root.getChildren().add(decreaseBrontoButton);
+        root.getChildren().add(increaseQuantityButton);
+        root.getChildren().add(typeText);
+        root.getChildren().add(decreaseQuantityButton);
+        root.getChildren().add(infoText);
 
         // Creating a scene object
         final Scene scene = new Scene(root, 300, 250);
